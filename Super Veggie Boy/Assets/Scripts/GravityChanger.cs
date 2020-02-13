@@ -14,8 +14,17 @@ public class GravityChanger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.name);
         isInside = true;
         previousGravity = Physics.gravity;
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (isInside && Physics.gravity != gravityValue * gravityDir)
+            Physics.gravity = gravityValue * gravityDir;
+        if (other.CompareTag("Player"))
+            other.GetComponent<RigidbodyController>().StartCoroutine("ChangeGravity", gravityDir);
     }
 
     private void OnTriggerExit(Collider other)
@@ -33,8 +42,7 @@ public class GravityChanger : MonoBehaviour
             timer = 0f;
             ChangeGravityDir();
         }
-        if (isInside && Physics.gravity != gravityValue * gravityDir)
-            Physics.gravity = gravityValue * gravityDir;
+        Debug.Log(gravityDir);
     }
 
     private void ChangeGravityDir()

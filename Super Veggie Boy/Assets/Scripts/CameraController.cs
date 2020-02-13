@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private Transform target;
+    [SerializeField] private Transform target = default;
     [SerializeField] private Vector3 offset = Vector3.zero;
     [SerializeField] private float distance = 6f;
     [SerializeField] private float reactivity = 0.7f;
@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
-        transform.position = target.position + new Vector3(0, 0, distance) + offset;
+        transform.position = target.position + target.forward * distance;
 
         if (reactivity < 0.05f)
             reactivity = 0.05f;
@@ -40,6 +40,6 @@ public class CameraController : MonoBehaviour
         targetRotation.y -= realRotation.y;
 
         transform.RotateAround(target.position + offset, transform.right, realRotation.x);
-        target.Rotate(target.up * realRotation.y);
+        target.Rotate(target.up, realRotation.y, Space.World);
     }
 }
