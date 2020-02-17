@@ -8,6 +8,7 @@ public class RigidbodyController : MonoBehaviour
     [SerializeField] private float movementDrag = 8f;
     [SerializeField] private float jumpForce = 20f;
     [SerializeField] private int jumpLimit = 1;
+    [SerializeField] private CameraController camController = default;
     [SerializeField] private Transform camTransform = default;
     [SerializeField] private Transform feet = default;
     [SerializeField] private LayerMask groundLayer = default;
@@ -17,11 +18,16 @@ public class RigidbodyController : MonoBehaviour
     private int jumpBuffer = 0;
     private bool isGrounded = false;
     private bool isJumping = false;
+    private bool isChangingDir = false;
+    private Vector3 gravityDir;
+    private GameObject ghost;
 
     private void Awake()
     {
+        gravityDir = Physics.gravity.normalized;
         rb = GetComponent<Rigidbody>();
         playerTransform = GetComponent<Transform>();
+        ghost = new GameObject("RotationGhost");
     }
 
     private void FixedUpdate()
@@ -38,9 +44,11 @@ public class RigidbodyController : MonoBehaviour
             rb.AddForce(-Physics.gravity / 2f, ForceMode.Acceleration);
 
         // Drag
-        rb.velocity -= 
-            (rb.velocity.x * movementDrag * Time.fixedDeltaTime * Vector3.right +
-            rb.velocity.z * movementDrag * Time.fixedDeltaTime * Vector3.forward);
+        Vector3 localVelocity = playerTransform.InverseTransformDirection(rb.velocity); // Convert to local space
+        localVelocity -= 
+            (localVelocity.x * movementDrag * Time.fixedDeltaTime * Vector3.right +
+            localVelocity.z * movementDrag * Time.fixedDeltaTime * Vector3.forward);
+        rb.velocity = playerTransform.TransformDirection(localVelocity);
     }
 
     private void Update()
@@ -49,23 +57,39 @@ public class RigidbodyController : MonoBehaviour
             if (isGrounded = Physics.OverlapSphere(feet.position, 0.3f, groundLayer).Length > 0)
                 TouchGround();
 
+        // Jump
         if (Input.GetButtonDown("Jump") && !isJumping && jumpBuffer < jumpLimit)
             Jump();
     }
 
-    public IEnumerator ChangeGravity(Vector3 newDir)
+    public IEnumerator ChangeDir(Vector3 newDir)
     {
-        Vector3 playerUp;
-        Vector3 playerForward;
-        while (playerTransform.up != -newDir)
+        if (!isChangingDir)
         {
-            playerUp = playerTransform.up;
-            playerForward = camTransform.forward;
-            Vector3 targetRotation = Quaternion.RotateTowards(Quaternion.LookRotation(playerForward), Quaternion.LookRotation(playerForward, -newDir), 180f * Time.deltaTime).eulerAngles;
-            rb.MoveRotation(Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z));
-            //camTransform.Rotate(Vector3.right * targetRotation.x);
-            yield return null;
+            isChangingDir = true;
+
+            float startTime = Time.time;
+            float currentTime = 0;
+
+            while (currentTime < 1)
+            {
+                currentTime = (Time.time - startTime) / 1f;
+                Debug.Log(currentTime);
+                ghost.transform.rotation = Quaternion.LookRotation(newDir, -camTransform.forward);
+                ghost.transform.Rotate(Vector3.right * 90f);
+
+                playerTransform.rotation = Quaternion.Lerp(playerTransform.rotation, ghost.transform.rotation, currentTime);
+                yield return null;
+            }
+
+            ghost.transform.rotation = Quaternion.LookRotation(newDir, -camTransform.forward);
+            ghost.transform.Rotate(Vector3.right * 90f);
+
+            playerTransform.rotation = ghost.transform.rotation;
+
+            isChangingDir = false;
         }
+        yield return null;
     }
 
     private void Jump()
@@ -73,7 +97,11 @@ public class RigidbodyController : MonoBehaviour
         jumpBuffer++;
         isJumping = true;
         StartCoroutine(nameof(ResetIsJumping)); // Avoid spamming
-        rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+
+        Vector3 localVelocity = playerTransform.InverseTransformDirection(rb.velocity); // Convert to local space
+        if (localVelocity.y < jumpForce)
+            localVelocity = new Vector3(localVelocity.x, jumpForce, localVelocity.z);
+        rb.velocity = playerTransform.TransformDirection(localVelocity);
     }
 
     private void TouchGround()

@@ -4,33 +4,33 @@ using UnityEngine;
 
 public class GravityChanger : MonoBehaviour
 {
-    [SerializeField] private float gravityValue = 9.81f;
+    [SerializeField] private float gravityMultiplier = 2f;
     [SerializeField] private float cooldown = 5f;
 
     private Vector3 gravityDir = Vector3.down;
-    private bool isInside = false;
     private float timer = 0f;
-    private Vector3 previousGravity = Vector3.zero;
+
+    [SerializeField] private List<CustomGravity> fallers = new List<CustomGravity>();
 
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log(other.name);
-        isInside = true;
-        previousGravity = Physics.gravity;
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (isInside && Physics.gravity != gravityValue * gravityDir)
-            Physics.gravity = gravityValue * gravityDir;
-        if (other.CompareTag("Player"))
-            other.GetComponent<RigidbodyController>().StartCoroutine("ChangeGravity", gravityDir);
+        if (other.TryGetComponent(out CustomGravity faller))
+        {
+            fallers.Add(faller);
+            faller.EnterGravityZone(gravityDir, gravityMultiplier);
+            if (other.TryGetComponent(out RigidbodyController player))
+                player.StartCoroutine("ChangeDir", -gravityDir);
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        isInside = false;
-        Physics.gravity = previousGravity;
+        if (other.TryGetComponent(out CustomGravity faller))
+        {
+            fallers.Remove(faller);
+            faller.LeaveGravityZone();
+        }
     }
 
     private void Update()
@@ -41,8 +41,8 @@ public class GravityChanger : MonoBehaviour
         {
             timer = 0f;
             ChangeGravityDir();
+            UpdateObjectsGravity();
         }
-        Debug.Log(gravityDir);
     }
 
     private void ChangeGravityDir()
@@ -55,5 +55,15 @@ public class GravityChanger : MonoBehaviour
             gravityDir = Vector3.right;
         else
             gravityDir = Vector3.down;
+    }
+
+    private void UpdateObjectsGravity()
+    {
+        foreach (CustomGravity faller in fallers)
+        {
+            faller.ChangeGravity(gravityDir, gravityMultiplier);
+            if (faller.gameObject.TryGetComponent(out RigidbodyController player))
+                player.StartCoroutine("ChangeDir", -gravityDir);
+        }
     }
 }
