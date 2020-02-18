@@ -720,8 +720,8 @@ GameObject:
   - component: {fileID: 726697416}
   - component: {fileID: 726697415}
   - component: {fileID: 726697414}
-  - component: {fileID: 726697413}
   - component: {fileID: 726697417}
+  - component: {fileID: 726697413}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -759,12 +759,14 @@ MonoBehaviour:
   movementDrag: 8
   jumpForce: 10
   jumpLimit: 1
+  customGravity: {fileID: 726697417}
   camController: {fileID: 1961286910}
   camTransform: {fileID: 1961286909}
   feet: {fileID: 644655701}
   groundLayer:
     serializedVersion: 2
     m_Bits: 311
+  changeDirAnimationSpeed: 0.01
 --- !u!54 &726697415
 Rigidbody:
   m_ObjectHideFlags: 0

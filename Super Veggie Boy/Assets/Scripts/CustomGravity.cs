@@ -39,4 +39,7 @@ public class CustomGravity : MonoBehaviour
         gravityDir = newGravityDir;
         gravityMultiplier = newGravityMultiplier;
     }
+
+    public Vector3 GetGravityDir() { return gravityDir; }
+    public float GetGravityMultiplier() { return gravityMultiplier; }
 }

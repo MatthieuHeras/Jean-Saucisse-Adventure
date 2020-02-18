@@ -8,10 +8,14 @@ public class RigidbodyController : MonoBehaviour
     [SerializeField] private float movementDrag = 8f;
     [SerializeField] private float jumpForce = 20f;
     [SerializeField] private int jumpLimit = 1;
+    [SerializeField] private CustomGravity customGravity = default;
     [SerializeField] private CameraController camController = default;
     [SerializeField] private Transform camTransform = default;
     [SerializeField] private Transform feet = default;
     [SerializeField] private LayerMask groundLayer = default;
+
+    [Range(0.01f, 1f)]
+    [SerializeField] private float changeDirAnimationSpeed = 1f;
 
     private Rigidbody rb;
     private Transform playerTransform;
@@ -19,15 +23,15 @@ public class RigidbodyController : MonoBehaviour
     private bool isGrounded = false;
     private bool isJumping = false;
     private bool isChangingDir = false;
-    private Vector3 gravityDir;
     private GameObject ghost;
 
     private void Awake()
     {
-        gravityDir = Physics.gravity.normalized;
         rb = GetComponent<Rigidbody>();
         playerTransform = GetComponent<Transform>();
         ghost = new GameObject("RotationGhost");
+        if (changeDirAnimationSpeed < 0.01f)
+            changeDirAnimationSpeed = 0.01f;
     }
 
     private void FixedUpdate()
@@ -41,7 +45,7 @@ public class RigidbodyController : MonoBehaviour
 
         // Large jumps
         if (Input.GetButton("Jump") && Vector3.Dot(rb.velocity, Physics.gravity) < 0f)
-            rb.AddForce(-Physics.gravity / 2f, ForceMode.Acceleration);
+            rb.AddForce(customGravity.GetGravityMultiplier() * Const.gravityForce / 2f * -customGravity.GetGravityDir(), ForceMode.Acceleration);
 
         // Drag
         Vector3 localVelocity = playerTransform.InverseTransformDirection(rb.velocity); // Convert to local space
@@ -62,18 +66,23 @@ public class RigidbodyController : MonoBehaviour
             Jump();
     }
 
-    public IEnumerator ChangeDir(Vector3 newDir)
+    public void ChangeDir(Vector3 newDir)
+    {
+        StopCoroutine(nameof(CoroutineChangeDir));
+        StartCoroutine(nameof(CoroutineChangeDir), newDir);
+    }
+
+    public IEnumerator CoroutineChangeDir(Vector3 newDir)
     {
         if (!isChangingDir)
         {
             isChangingDir = true;
-
             float startTime = Time.time;
             float currentTime = 0;
 
             while (currentTime < 1)
             {
-                currentTime = (Time.time - startTime) / 1f;
+                currentTime = (Time.time - startTime) * changeDirAnimationSpeed;
                 Debug.Log(currentTime);
                 ghost.transform.rotation = Quaternion.LookRotation(newDir, -camTransform.forward);
                 ghost.transform.Rotate(Vector3.right * 90f);

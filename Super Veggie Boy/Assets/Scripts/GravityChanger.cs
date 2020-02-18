@@ -20,7 +20,7 @@ public class GravityChanger : MonoBehaviour
             fallers.Add(faller);
             faller.EnterGravityZone(gravityDir, gravityMultiplier);
             if (other.TryGetComponent(out RigidbodyController player))
-                player.StartCoroutine("ChangeDir", -gravityDir);
+                player.ChangeDir(-gravityDir);
         }
     }
 
