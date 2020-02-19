@@ -9,7 +9,6 @@ public class RigidbodyController : MonoBehaviour
     [SerializeField] private float jumpForce = 20f;
     [SerializeField] private int jumpLimit = 1;
     [SerializeField] private CustomGravity customGravity = default;
-    [SerializeField] private CameraController camController = default;
     [SerializeField] private Transform camTransform = default;
     [SerializeField] private Transform feet = default;
     [SerializeField] private LayerMask groundLayer = default;
@@ -22,7 +21,6 @@ public class RigidbodyController : MonoBehaviour
     private int jumpBuffer = 0;
     private bool isGrounded = false;
     private bool isJumping = false;
-    private bool isChangingDir = false;
     private GameObject ghost;
 
     private void Awake()
@@ -48,11 +46,11 @@ public class RigidbodyController : MonoBehaviour
             rb.AddForce(customGravity.GetGravityMultiplier() * Const.gravityForce / 2f * -customGravity.GetGravityDir(), ForceMode.Acceleration);
 
         // Drag
-        Vector3 localVelocity = playerTransform.InverseTransformDirection(rb.velocity); // Convert to local space
-        localVelocity -= 
-            (localVelocity.x * movementDrag * Time.fixedDeltaTime * Vector3.right +
-            localVelocity.z * movementDrag * Time.fixedDeltaTime * Vector3.forward);
-        rb.velocity = playerTransform.TransformDirection(localVelocity);
+        //Vector3 localVelocity = playerTransform.InverseTransformDirection(rb.velocity); // Convert to local space
+        //localVelocity -= 
+        //    (localVelocity.x * movementDrag * Time.fixedDeltaTime * Vector3.right +
+        //    localVelocity.z * movementDrag * Time.fixedDeltaTime * Vector3.forward);
+        //rb.velocity = playerTransform.TransformDirection(localVelocity);
     }
 
     private void Update()
@@ -74,30 +72,29 @@ public class RigidbodyController : MonoBehaviour
 
     public IEnumerator CoroutineChangeDir(Vector3 newDir)
     {
-        if (!isChangingDir)
+        // Change the rotation of the player, depending on its current rotation and the gravity using Lerp
+        // The animation will almost always finish before currentTime reaches 1, because the current rotation is the starting point of the lerp. 
+        // This is not really an issue as you can still slow it down and the animation will stop when the new direction is set anyway
+
+        
+        float startTime = Time.time;
+        float currentTime = 0;
+
+        while (currentTime < 1 && !playerTransform.up.Equals(newDir))
         {
-            isChangingDir = true;
-            float startTime = Time.time;
-            float currentTime = 0;
+            currentTime = (Time.time - startTime) * changeDirAnimationSpeed;
+            ghost.transform.rotation = Quaternion.LookRotation(newDir, -camTransform.forward);  // For now, we are using a ghost, which is not very clean
+            ghost.transform.Rotate(Vector3.right * 90f);                                        // but this is the only way we can apply a rotation on a certain axis
 
-            while (currentTime < 1)
-            {
-                currentTime = (Time.time - startTime) * changeDirAnimationSpeed;
-                Debug.Log(currentTime);
-                ghost.transform.rotation = Quaternion.LookRotation(newDir, -camTransform.forward);
-                ghost.transform.Rotate(Vector3.right * 90f);
-
-                playerTransform.rotation = Quaternion.Lerp(playerTransform.rotation, ghost.transform.rotation, currentTime);
-                yield return null;
-            }
-
-            ghost.transform.rotation = Quaternion.LookRotation(newDir, -camTransform.forward);
-            ghost.transform.Rotate(Vector3.right * 90f);
-
-            playerTransform.rotation = ghost.transform.rotation;
-
-            isChangingDir = false;
+            playerTransform.rotation = Quaternion.Lerp(playerTransform.rotation, ghost.transform.rotation, currentTime);
+            yield return null;
         }
+
+        ghost.transform.rotation = Quaternion.LookRotation(newDir, -camTransform.forward);
+        ghost.transform.Rotate(Vector3.right * 90f);
+
+        playerTransform.rotation = ghost.transform.rotation;
+
         yield return null;
     }
 
@@ -109,7 +106,7 @@ public class RigidbodyController : MonoBehaviour
 
         Vector3 localVelocity = playerTransform.InverseTransformDirection(rb.velocity); // Convert to local space
         if (localVelocity.y < jumpForce)
-            localVelocity = new Vector3(localVelocity.x, jumpForce, localVelocity.z);
+            localVelocity = new Vector3(localVelocity.x, jumpForce, localVelocity.z); // Use velocity instead of force, better for gameplay
         rb.velocity = playerTransform.TransformDirection(localVelocity);
     }
 

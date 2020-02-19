@@ -6,11 +6,24 @@ public class GravityChanger : MonoBehaviour
 {
     [SerializeField] private float gravityMultiplier = 2f;
     [SerializeField] private float cooldown = 5f;
+    [SerializeField] private List<Vector3> gravityDirs = new List<Vector3>();
 
-    private Vector3 gravityDir = Vector3.down;
+    private Vector3 gravityDir;
+    private int index = 0;
     private float timer = 0f;
 
-    [SerializeField] private List<CustomGravity> fallers = new List<CustomGravity>();
+    private List<CustomGravity> fallers = new List<CustomGravity>();
+
+    private void Awake()
+    {
+        if (gravityDirs.Count == 0)
+            Debug.LogError(gameObject.name + " needs at least one gravity direction ! Do not use gravityChanger without new gravity direction !");
+    }
+
+    private void Start()
+    {
+        gravityDir = gravityDirs[0];
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -30,6 +43,8 @@ public class GravityChanger : MonoBehaviour
         {
             fallers.Remove(faller);
             faller.LeaveGravityZone();
+            if (other.TryGetComponent(out RigidbodyController player))
+                player.ChangeDir(-gravityDir);
         }
     }
 
@@ -47,14 +62,10 @@ public class GravityChanger : MonoBehaviour
 
     private void ChangeGravityDir()
     {
-        if (gravityDir.Equals(Vector3.down))
-            gravityDir = Vector3.left;
-        else if (gravityDir.Equals(Vector3.left))
-            gravityDir = Vector3.up;
-        else if (gravityDir.Equals(Vector3.up))
-            gravityDir = Vector3.right;
-        else
-            gravityDir = Vector3.down;
+        index++;
+        if (index >= gravityDirs.Count)
+            index = 0;
+        gravityDir = gravityDirs[index];
     }
 
     private void UpdateObjectsGravity()
@@ -63,7 +74,7 @@ public class GravityChanger : MonoBehaviour
         {
             faller.ChangeGravity(gravityDir, gravityMultiplier);
             if (faller.gameObject.TryGetComponent(out RigidbodyController player))
-                player.StartCoroutine("ChangeDir", -gravityDir);
+                player.ChangeDir(-gravityDir);
         }
     }
 }
