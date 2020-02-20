@@ -13,12 +13,13 @@ public class RigidbodyController : MonoBehaviour
     [SerializeField] private Transform feet = default;
     [SerializeField] private LayerMask groundLayer = default;
 
-    [Range(0.01f, 1f)]
+    [Range(0.01f, 2f)]
     [SerializeField] private float changeDirAnimationSpeed = 1f;
 
     private Rigidbody rb;
     private Transform playerTransform;
     private int jumpBuffer = 0;
+    private List<int> zoneIDs = new List<int>();
     private bool isGrounded = false;
     private bool isJumping = false;
     private GameObject ghost;
@@ -46,11 +47,11 @@ public class RigidbodyController : MonoBehaviour
             rb.AddForce(customGravity.GetGravityMultiplier() * Const.gravityForce / 2f * -customGravity.GetGravityDir(), ForceMode.Acceleration);
 
         // Drag
-        //Vector3 localVelocity = playerTransform.InverseTransformDirection(rb.velocity); // Convert to local space
-        //localVelocity -= 
-        //    (localVelocity.x * movementDrag * Time.fixedDeltaTime * Vector3.right +
-        //    localVelocity.z * movementDrag * Time.fixedDeltaTime * Vector3.forward);
-        //rb.velocity = playerTransform.TransformDirection(localVelocity);
+        Vector3 localVelocity = playerTransform.InverseTransformDirection(rb.velocity); // Convert to local space
+        localVelocity -=
+            (localVelocity.x * movementDrag * Time.fixedDeltaTime * Vector3.right +
+            localVelocity.z * movementDrag * Time.fixedDeltaTime * Vector3.forward);
+        rb.velocity = playerTransform.TransformDirection(localVelocity);
     }
 
     private void Update()
@@ -64,10 +65,25 @@ public class RigidbodyController : MonoBehaviour
             Jump();
     }
 
-    public void ChangeDir(Vector3 newDir)
+    public void EnterGravityZone(Vector3 newDir, int zoneIndex)
     {
-        StopCoroutine(nameof(CoroutineChangeDir));
-        StartCoroutine(nameof(CoroutineChangeDir), newDir);
+        zoneIDs.Add(zoneIndex);
+        ChangeDir(newDir, zoneIndex);
+    }
+
+    public void LeaveGravityZone(int zoneIndex)
+    {
+        zoneIDs.Remove(zoneIndex);
+        if (zoneIDs.Count == 0)
+            ChangeDir(Vector3.up, -1);
+    }
+    public void ChangeDir(Vector3 newDir, int zoneIndex)
+    {
+        if (zoneIDs.Count == 0 || zoneIndex == zoneIDs[zoneIDs.Count - 1])
+        {
+            StopCoroutine(nameof(CoroutineChangeDir));
+            StartCoroutine(nameof(CoroutineChangeDir), newDir);
+        }
     }
 
     public IEnumerator CoroutineChangeDir(Vector3 newDir)

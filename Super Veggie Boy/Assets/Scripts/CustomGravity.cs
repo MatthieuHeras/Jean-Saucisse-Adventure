@@ -8,7 +8,7 @@ public class CustomGravity : MonoBehaviour
 
     private Vector3 gravityDir = Vector3.down;
     private float gravityMultiplier = 1f;
-    public int ZoneBuffer { get; private set; }
+    private List<int> zoneIDs = new List<int>();
 
     private void Awake()
     {
@@ -20,22 +20,24 @@ public class CustomGravity : MonoBehaviour
         rb.AddForce(gravityDir * Const.gravityForce * gravityMultiplier * Time.fixedDeltaTime * 60f);
     }
 
-    public void EnterGravityZone(Vector3 newGravityDir, float newGravityMultiplier)
+    public void EnterGravityZone(Vector3 newGravityDir, float newGravityMultiplier, int zoneIndex)
     {
-        ZoneBuffer++;
-        ChangeGravity(newGravityDir, newGravityMultiplier);
+        zoneIDs.Add(zoneIndex);
+        ChangeGravity(newGravityDir, newGravityMultiplier, zoneIndex);
     }
 
-    public void LeaveGravityZone()
+    public void LeaveGravityZone(int zoneIndex)
     {
-        if (--ZoneBuffer == 0)
+        zoneIDs.Remove(zoneIndex);
+        if (zoneIDs.Count == 0)
         {
-            ChangeGravity(Vector3.down, 1);
+            ChangeGravity(Vector3.down, 1, 0);
         }
     }
     
-    public void ChangeGravity(Vector3 newGravityDir, float newGravityMultiplier)
+    public void ChangeGravity(Vector3 newGravityDir, float newGravityMultiplier, int zoneIndex) // put everything you want if zoneIndexes is empty
     {
+        if (zoneIDs.Count == 0 || zoneIDs[zoneIDs.Count - 1] == zoneIndex)
         gravityDir = newGravityDir;
         gravityMultiplier = newGravityMultiplier;
     }
