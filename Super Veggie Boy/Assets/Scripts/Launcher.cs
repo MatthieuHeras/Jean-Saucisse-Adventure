@@ -8,6 +8,7 @@ public class Launcher : MonoBehaviour
     [SerializeField] private GameObject prefab = default;
     [SerializeField] private float speed = 0f;
     [SerializeField] private float cooldown = 5f;
+    [SerializeField] private float lifeTime = 5f;
 
     private void Start()
     {
@@ -16,8 +17,9 @@ public class Launcher : MonoBehaviour
 
     private void SpawnPrefab()
     {
-        GameObject go = Instantiate(prefab, launcherTransform.position, Quaternion.identity);
+        GameObject go = Instantiate(prefab, launcherTransform.position, launcherTransform.rotation);
         go.transform.localScale = launcherTransform.localScale;
         go.GetComponent<Rigidbody>().velocity = launcherTransform.forward * speed;
+        Destroy(go, lifeTime);
     }
 }

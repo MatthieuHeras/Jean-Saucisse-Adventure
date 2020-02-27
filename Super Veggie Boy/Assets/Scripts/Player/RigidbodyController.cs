@@ -22,13 +22,14 @@ public class RigidbodyController : MonoBehaviour
     private List<int> zoneIDs = new List<int>();
     private bool isGrounded = false;
     private bool isJumping = false;
-    private GameObject ghost;
+    private bool hasLeftGround = false;
+    private GameObject rotationGhost;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         playerTransform = GetComponent<Transform>();
-        ghost = new GameObject("RotationGhost");
+        rotationGhost = new GameObject("RotationGhost");
         if (changeDirAnimationSpeed < 0.01f)
             changeDirAnimationSpeed = 0.01f;
     }
@@ -57,12 +58,20 @@ public class RigidbodyController : MonoBehaviour
     private void Update()
     {
         if (!isJumping)
+        {
             if (isGrounded = Physics.OverlapSphere(feet.position, 0.3f, groundLayer).Length > 0)
                 TouchGround();
-
+            else if (!hasLeftGround)
+                LeaveGround();
+        }
         // Jump
         if (Input.GetButtonDown("Jump") && !isJumping && jumpBuffer < jumpLimit)
             Jump();
+    }
+
+    public void Teleport(Vector3 point)
+    {
+        playerTransform.position = point;
     }
 
     public void EnterGravityZone(Vector3 newDir, int zoneIndex)
@@ -70,7 +79,6 @@ public class RigidbodyController : MonoBehaviour
         zoneIDs.Add(zoneIndex);
         ChangeDir(newDir, zoneIndex);
     }
-
     public void LeaveGravityZone(int zoneIndex)
     {
         zoneIDs.Remove(zoneIndex);
@@ -99,17 +107,17 @@ public class RigidbodyController : MonoBehaviour
         while (currentTime < 1 && !playerTransform.up.Equals(newDir))
         {
             currentTime = (Time.time - startTime) * changeDirAnimationSpeed;
-            ghost.transform.rotation = Quaternion.LookRotation(newDir, -camTransform.forward);  // For now, we are using a ghost, which is not very clean
-            ghost.transform.Rotate(Vector3.right * 90f);                                        // but this is the only way we can apply a rotation on a certain axis
+            rotationGhost.transform.rotation = Quaternion.LookRotation(newDir, -camTransform.forward);  // For now, we are using a ghost, which is not very clean
+            rotationGhost.transform.Rotate(Vector3.right * 90f);                                        // but this is the only (known) way we can apply a rotation on a certain axis
 
-            playerTransform.rotation = Quaternion.Lerp(playerTransform.rotation, ghost.transform.rotation, currentTime);
+            playerTransform.rotation = Quaternion.Lerp(playerTransform.rotation, rotationGhost.transform.rotation, currentTime);
             yield return null;
         }
 
-        ghost.transform.rotation = Quaternion.LookRotation(newDir, -camTransform.forward);
-        ghost.transform.Rotate(Vector3.right * 90f);
+        rotationGhost.transform.rotation = Quaternion.LookRotation(newDir, -camTransform.forward);
+        rotationGhost.transform.Rotate(Vector3.right * 90f);
 
-        playerTransform.rotation = ghost.transform.rotation;
+        playerTransform.rotation = rotationGhost.transform.rotation;
 
         yield return null;
     }
@@ -118,6 +126,7 @@ public class RigidbodyController : MonoBehaviour
     {
         jumpBuffer++;
         isJumping = true;
+        hasLeftGround = true;
         StartCoroutine(nameof(ResetIsJumping)); // Avoid spamming
 
         Vector3 localVelocity = playerTransform.InverseTransformDirection(rb.velocity); // Convert to local space
@@ -129,6 +138,12 @@ public class RigidbodyController : MonoBehaviour
     private void TouchGround()
     {
         jumpBuffer = 0;
+        hasLeftGround = false;
+    }
+    private void LeaveGround()
+    {
+        jumpBuffer++;
+        hasLeftGround = true;
     }
 
     private IEnumerator ResetIsJumping()

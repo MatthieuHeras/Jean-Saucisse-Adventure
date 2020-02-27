@@ -21,7 +21,7 @@ public class CustomGravity : MonoBehaviour
     }
 
     public void EnterGravityZone(Vector3 newGravityDir, float newGravityMultiplier, int zoneIndex)
-    {
+    { 
         zoneIDs.Add(zoneIndex);
         ChangeGravity(newGravityDir, newGravityMultiplier, zoneIndex);
     }

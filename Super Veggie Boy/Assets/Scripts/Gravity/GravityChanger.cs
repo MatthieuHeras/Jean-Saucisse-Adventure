@@ -9,13 +9,13 @@ public class GravityChanger : MonoBehaviour
     [SerializeField] private float gravityMultiplier = 2f;
     [SerializeField] private float cooldown = 5f;
     [SerializeField] private List<Vector3> gravityDirs = new List<Vector3>();
-    [SerializeField] private ParticleSystem particles = default;
 
     private Vector3 gravityDir;
     private int index = 0;
     private float timer = 0f;
     private int zoneID;
     private List<CustomGravity> fallers = new List<CustomGravity>();
+    ParticleSystem.ShapeModule shape;
 
     private void Awake()
     {
@@ -23,6 +23,8 @@ public class GravityChanger : MonoBehaviour
 
         if (gravityDirs.Count == 0)
             Debug.LogError(gameObject.name + " needs at least one gravity direction ! Do not use gravityChanger without new gravity direction !");
+
+        shape = GetComponent<ParticleSystem>().shape;
     }
 
     private void Start()
@@ -32,7 +34,6 @@ public class GravityChanger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.name);
         if (other.TryGetComponent(out CustomGravity faller))
         {
             fallers.Add(faller);
@@ -71,7 +72,6 @@ public class GravityChanger : MonoBehaviour
             index = 0;
         gravityDir = gravityDirs[index];
 
-        ParticleSystem.ShapeModule shape = particles.shape;
         shape.rotation = Quaternion.LookRotation(gravityDir).eulerAngles;
         shape.position = -gravityDir / 2f;
         UpdateObjectsGravity();
