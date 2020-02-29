@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private Animator anim;
-    [SerializeField] private RigidbodyController rbController;
+    [SerializeField] private Animator anim = default;
+    [SerializeField] private RigidbodyController rbController = default;
 
     private void Update()
     {

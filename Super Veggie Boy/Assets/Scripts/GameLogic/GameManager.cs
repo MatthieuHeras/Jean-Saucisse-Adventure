@@ -31,6 +31,11 @@ public class GameManager : MonoBehaviour
         StartCoroutine(CoroutineWin());
     }
 
+    public void ReturnToMenu()
+    {
+        SceneManager.LoadScene("Menu");
+    }
+
     private IEnumerator CoroutineWin()
     {
         anim.SetBool("IsWin", true);
@@ -39,7 +44,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(fadeTime);
 
         if (SceneManager.GetActiveScene().buildIndex == SceneManager.sceneCountInBuildSettings - 1)
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene("Menu");
         else
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
