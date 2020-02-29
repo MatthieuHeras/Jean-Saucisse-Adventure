@@ -211,7 +211,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &40397175
 GameObject:
@@ -523,7 +523,7 @@ Transform:
   - {fileID: 676768655}
   - {fileID: 1212331494}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &360174356 stripped
 Transform:
@@ -1427,7 +1427,7 @@ PrefabInstance:
     - target: {fileID: 1519778127857016748, guid: bb9bb29bffea0c440b8fd24ac108fff8,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1519778127857016748, guid: bb9bb29bffea0c440b8fd24ac108fff8,
         type: 3}
@@ -1571,7 +1571,7 @@ PrefabInstance:
     - target: {fileID: 2492802240611408382, guid: fb3245e9e502e9b48a2bd997f7bf0eee,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2492802240611408382, guid: fb3245e9e502e9b48a2bd997f7bf0eee,
         type: 3}
@@ -1587,6 +1587,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2789721994586936051, guid: fb3245e9e502e9b48a2bd997f7bf0eee,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 1.8898699
+      objectReference: {fileID: 0}
+    - target: {fileID: 2789721994586936051, guid: fb3245e9e502e9b48a2bd997f7bf0eee,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.005484104
+      objectReference: {fileID: 0}
+    - target: {fileID: 2789721994586936051, guid: fb3245e9e502e9b48a2bd997f7bf0eee,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.z
+      value: 0.023637474
+      objectReference: {fileID: 0}
+    - target: {fileID: 4713460209813087747, guid: fb3245e9e502e9b48a2bd997f7bf0eee,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.y
+      value: 2.0420265
+      objectReference: {fileID: 0}
+    - target: {fileID: 4713460209813087747, guid: fb3245e9e502e9b48a2bd997f7bf0eee,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.x
+      value: 0.005484104
+      objectReference: {fileID: 0}
+    - target: {fileID: 4713460209813087747, guid: fb3245e9e502e9b48a2bd997f7bf0eee,
+        type: 3}
+      propertyPath: m_ConnectedAnchor.z
+      value: 0.023637474
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fb3245e9e502e9b48a2bd997f7bf0eee, type: 3}

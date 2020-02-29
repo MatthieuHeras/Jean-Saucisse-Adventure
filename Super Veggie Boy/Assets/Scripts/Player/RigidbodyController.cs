@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class RigidbodyController : MonoBehaviour
 {
+
+    public float wishedSpeed = 0f; // between 0 and 1, for animation
+
     [SerializeField] private float speed = 50f;
     [SerializeField] private float movementDrag = 8f;
     [SerializeField] private float jumpForce = 20f;
@@ -40,6 +43,7 @@ public class RigidbodyController : MonoBehaviour
         float xAxis = Input.GetAxis("Horizontal");
         float yAxis = Input.GetAxis("Vertical");
 
+        wishedSpeed = (Mathf.Abs(xAxis) + Mathf.Abs(yAxis)) / 2f;
         // Move
         rb.AddRelativeForce(new Vector3(speed * Time.fixedDeltaTime * xAxis, 0f, speed * Time.fixedDeltaTime * yAxis), ForceMode.VelocityChange);
 
