@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float fadeTime = 1f;
     [SerializeField] private int nbLives = 5;
     [SerializeField] private int nbAddLives = 5;
-
+    
     private int currentNbLives;
     private Vector3 spawnPoint = new Vector3(0f, 1.5f, 0f);
     private List<Vector3> passedCheckpoints = new List<Vector3>();
@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         passedCheckpoints.Add(spawnPoint);
+        //Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void Win()
