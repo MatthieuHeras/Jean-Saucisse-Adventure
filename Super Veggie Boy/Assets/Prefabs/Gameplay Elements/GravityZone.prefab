@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7099687785453133557}
   - component: {fileID: 1057811541656590221}
   m_Layer: 10
-  m_Name: Gravity Zone
+  m_Name: GravityZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
