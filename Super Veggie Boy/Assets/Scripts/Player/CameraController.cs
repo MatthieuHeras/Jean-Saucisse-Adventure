@@ -16,6 +16,12 @@ public class CameraController : MonoBehaviour
     private float xCurrentRotation = 0f;
     private Vector2 targetRotation = Vector2.zero;
 
+    private void Awake()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
     private void Start()
     {
         transform.position = target.position + target.forward * distance;

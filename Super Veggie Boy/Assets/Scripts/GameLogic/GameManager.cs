@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         passedCheckpoints.Add(spawnPoint);
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void Win()
