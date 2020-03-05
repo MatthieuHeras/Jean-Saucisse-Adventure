@@ -48,6 +48,5 @@ public class DialogueManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         trigger.EndAction();
-        Debug.Log("End of conv");
     }
 }

@@ -226,7 +226,6 @@ GameObject:
   - component: {fileID: 277126833}
   - component: {fileID: 277126834}
   - component: {fileID: 277126835}
-  - component: {fileID: 277126836}
   m_Layer: 0
   m_Name: CinematicAnimator
   m_TagString: Untagged
@@ -290,18 +289,7 @@ MonoBehaviour:
   fadeTime: 1
   nbLives: 5
   nbAddLives: 5
---- !u!114 &277126836
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 277126832}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dec9ff5590b6ea845bd187b4218f55bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  lockedCursorOnLaunch: 1
 --- !u!1 &317990387
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float fadeTime = 1f;
     [SerializeField] private int nbLives = 5;
     [SerializeField] private int nbAddLives = 5;
+    [SerializeField] private bool lockedCursorOnLaunch = false;
     
     private int currentNbLives;
     private Vector3 spawnPoint = new Vector3(0f, 1.5f, 0f);
@@ -19,6 +20,8 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        Cursor.lockState = (lockedCursorOnLaunch) ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !lockedCursorOnLaunch;
         ResetLives();
     }
     private void Start()
@@ -30,10 +33,12 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(CoroutineWin());
     }
-
-    public void ReturnToMenu()
+    public void WinCut()
     {
-        SceneManager.LoadScene("Menu");
+        if (SceneManager.GetActiveScene().buildIndex == SceneManager.sceneCountInBuildSettings - 1)
+            SceneManager.LoadScene("Menu");
+        else
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void Quit()
@@ -65,10 +70,13 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(fadeTime);
 
-        if (ChangeNbLives(currentNbLives - 1) == 0)
+        if (passedCheckpoints.Count > 0)
         {
-            ResetCheckpoints();
-            ResetLives();
+            if (ChangeNbLives(currentNbLives - 1) <= 0)
+            {
+                ResetCheckpoints();
+                ResetLives();
+            }
         }
         player.Teleport(spawnPoint);
     }

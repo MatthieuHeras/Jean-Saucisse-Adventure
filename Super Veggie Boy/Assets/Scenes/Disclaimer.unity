@@ -334,6 +334,7 @@ MonoBehaviour:
   fadeTime: 1
   nbLives: 5
   nbAddLives: 5
+  lockedCursorOnLaunch: 1
 --- !u!4 &853099704
 Transform:
   m_ObjectHideFlags: 0

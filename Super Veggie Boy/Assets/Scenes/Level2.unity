@@ -1568,6 +1568,11 @@ PrefabInstance:
       propertyPath: anim
       value: 
       objectReference: {fileID: 1519778128876571812}
+    - target: {fileID: 2958677193728060135, guid: a098cc347e63f664d8d88495ec4a1714,
+        type: 3}
+      propertyPath: lockedCursorOnLaunch
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4703904631915359566, guid: a098cc347e63f664d8d88495ec4a1714,
         type: 3}
       propertyPath: m_LocalPosition.x

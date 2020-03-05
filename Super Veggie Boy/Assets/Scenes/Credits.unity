@@ -280,14 +280,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Developers :\n\nCresson Fran\xE7ois (Eraddak)\nCroquet Max\nHeras Matthieu
-    (Grisnak)\n\n\n3D Game Artists :\n\n... who said we needed artists ? Don't you
-    like Jean-Saucisse ?\n\n\n2D Game Artists, Animators, Concept Artists, Environment
-    Game Artists, VFX artist, Storyboard Artists, Technical artists, Motion Graphics
-    Artists :\n\n\n<b>WOW</b>, calm down !! It's called <b>minimalism</b> !\n\n\n\n\nMusic
-    :\n\nOkay my bad, we needed artists...\n\n\nGame design :\n\nI know what you're
-    thinking, devs alone suck ...\n\n\nMarketing : \n\nYou must be kidding ? This
-    game is just ... okay I'm out."
+  m_text: "Developers :\n\nCresson Fran\xE7ois (Eraddak)\nCroquet Max (Barathon)\nHeras
+    Matthieu (Grisnak)\n\n\n3D Game Artists :\n\n... who said we needed artists ?
+    Don't you like Jean Saucisse ?\n\n\n2D Game Artists, Animators, Concept Artists,
+    Environment Game Artists, VFX artist, Storyboard Artists, Technical artists,
+    Motion Graphics Artists :\n\n\n<b>WOW</b>, calm down !! It's called <b>minimalism</b>
+    !\n\n\n\n\nMusic :\n\nOkay my bad, we needed artists...\n\n\nGame design :\n\nI
+    know what you're thinking, devs alone suck ...\n\n\nMarketing : \n\nYou must
+    be kidding ? This game is just ... okay I'm out."
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -356,10 +356,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: -1528.3357}
   m_textInfo:
     textComponent: {fileID: 683611467}
-    characterCount: 544
+    characterCount: 555
     spriteCount: 0
-    spaceCount: 107
-    wordCount: 74
+    spaceCount: 109
+    wordCount: 76
     linkCount: 0
     lineCount: 38
     pageCount: 1
@@ -405,6 +405,7 @@ MonoBehaviour:
   fadeTime: 1
   nbLives: 5
   nbAddLives: 5
+  lockedCursorOnLaunch: 1
 --- !u!1 &1158129701
 GameObject:
   m_ObjectHideFlags: 0
