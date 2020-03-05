@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WinZone : TriggerZone
+public class Portal : TriggerZone
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out Player player))
-            gameManager.Win();
+        gameManager.Win();
     }
 }

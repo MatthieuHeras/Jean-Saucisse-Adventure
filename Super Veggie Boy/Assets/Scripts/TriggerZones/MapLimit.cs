@@ -6,9 +6,6 @@ public class MapLimit : TriggerZone
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.TryGetComponent(out Player player))
-        {
-            gameManager.Lose();
-        }
+        gameManager.Lose();
     }
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public bool isLocked = false;
+
     [SerializeField] private Transform camTransform = default;
     [SerializeField] private Transform target = default;
     [SerializeField] private Vector3 offset = Vector3.zero;
@@ -26,6 +28,9 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
+        if (isLocked)
+            return;
+
         float xMouse = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float yMouse = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 

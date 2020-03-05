@@ -9,6 +9,7 @@ public class DialogueManager : MonoBehaviour
     [SerializeField] private Animator anim = default;
     [SerializeField] private TextMeshProUGUI title = default;
     [SerializeField] private TextMeshProUGUI text = default;
+    [SerializeField] private CameraController camController = default;
 
     private Queue<string> sentences;
     private DialogueTrigger trigger;
@@ -16,9 +17,9 @@ public class DialogueManager : MonoBehaviour
 
     public void StartDialogue(Dialogue dialogue, DialogueTrigger dialogueTrigger)
     {
-        Debug.Log("Start of conv");
         trigger = dialogueTrigger;
-        //Cursor.lockState = CursorLockMode.None;
+        camController.isLocked = true;
+        Cursor.lockState = CursorLockMode.None;
         anim.SetBool("Open", true);
         sentences = new Queue<string>();
         title.text = dialogue.name;
@@ -42,7 +43,8 @@ public class DialogueManager : MonoBehaviour
     private void EndDialogue()
     {
         anim.SetBool("Open", false);
-        //Cursor.lockState = CursorLockMode.Locked;
+        camController.isLocked = false;
+        Cursor.lockState = CursorLockMode.Locked;
         trigger.EndAction();
         Debug.Log("End of conv");
     }
