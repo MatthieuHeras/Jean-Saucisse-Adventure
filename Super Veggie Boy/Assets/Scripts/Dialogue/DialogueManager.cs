@@ -20,6 +20,7 @@ public class DialogueManager : MonoBehaviour
         trigger = dialogueTrigger;
         camController.isLocked = true;
         Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         anim.SetBool("Open", true);
         sentences = new Queue<string>();
         title.text = dialogue.name;
@@ -45,6 +46,7 @@ public class DialogueManager : MonoBehaviour
         anim.SetBool("Open", false);
         camController.isLocked = false;
         Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
         trigger.EndAction();
         Debug.Log("End of conv");
     }
