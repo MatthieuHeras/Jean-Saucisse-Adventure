@@ -24,7 +24,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         passedCheckpoints.Add(spawnPoint);
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void Win()
@@ -35,6 +34,11 @@ public class GameManager : MonoBehaviour
     public void ReturnToMenu()
     {
         SceneManager.LoadScene("Menu");
+    }
+
+    public void Quit()
+    {
+        Application.Quit();
     }
 
     private IEnumerator CoroutineWin()
